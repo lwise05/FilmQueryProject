@@ -42,6 +42,19 @@ public class Film {
 		this.specialFeatures = specialFeatures;
 		this.actors = actors;
 	}
+	
+	
+
+
+
+	public Film(int filmID, String title, String description, int releaseYear, String rating) {
+		super();
+		this.filmID = filmID;
+		this.title = title;
+		this.description = description;
+		this.releaseYear = releaseYear;
+		this.rating = rating;
+	}
 
 
 
@@ -196,8 +209,8 @@ public class Film {
 				+ rentalRate + "\nLength: " + length + "\nReplacement Cost: " + replacementCost + "\nRating: " + rating
 				+ "\nSpecial Features: " + specialFeatures + "\n\nActors In Film:" + actors;
 	}
-
-
+	
+	
 
 	@Override
 	public int hashCode() {

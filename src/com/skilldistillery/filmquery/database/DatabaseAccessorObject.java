@@ -154,5 +154,54 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 		return actors;
 	}
+	
+	
+//	public Film printBasicFilmInfo(int film) {
+//		
+//		System.out.println("Film ID: " + film.getFilmID() + " \nTitle: " + film.getTitle() + " \nYear released: " + film.getReleaseYear());
+//		System.out.println(" \nRating: " + film.getRating() + " \nDescription: " + film.getDescription());
+//		
+//	}
+	@Override
+	public Film findBasicFilm(int filmId) {
+		Film film = null;
+
+		try {
+			// 1. connecting to the database
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+
+			// 2. defining query we want to execute and substituting values for placeholder
+			String filmText = "SELECT id, title, release_year, rating, description FROM film WHERE id = ?";
+
+			PreparedStatement stmt = conn.prepareStatement(filmText);
+			stmt.setInt(1, filmId);
+
+			// 3. execute query
+			ResultSet rs = stmt.executeQuery();
+
+			// 4. process result
+			if (rs.next()) {
+				int filmID = rs.getInt("id");
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				short releaseYear = rs.getShort("release_year");
+				String rating = rs.getString("rating");
+
+
+				Film filmObj = new Film(filmID, title, description, releaseYear, rating);		
+				return filmObj;
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			System.err.println("Error locating film " + filmId);
+			System.out.println(e);
+		}
+		return film;
+	}
+	
+	
 
 }
