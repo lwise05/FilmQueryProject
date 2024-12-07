@@ -72,7 +72,7 @@ public class FilmQueryApp {
 					System.out.println();
 					System.out.println("Sorry, unable to locate films with that keyword.");
 				} else
-					System.out.println(filmsByKeyword);
+					basicInfoByKeyword(filmsByKeyword);
 					
 				break;
 
@@ -116,7 +116,12 @@ public class FilmQueryApp {
 	public void basicInfoByKeyword(List<Film> films) {
 		
 		for(Film film : films) {
-			
+			System.out.println("Film Id: " + film.getFilmID());
+			System.out.println("Title : " + film.getTitle());
+			System.out.println("Release year: " + film.getReleaseYear());
+			System.out.println("Rating: " + film.getRating());
+			System.out.println("Description : " + film.getDescription());
+			System.out.println();
 			
 		}
 		
