@@ -1,5 +1,6 @@
 package com.skilldistillery.filmquery.app;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -38,59 +39,56 @@ public class FilmQueryApp {
 	private void startUserInterface(Scanner input) {
 		// print menu
 		// get choice
-		//  -do while loop
-	
-		//act on choice
+		// -do while loop
+
+		// act on choice
 		// repeat until they quit
-		
+
 		boolean keepgoing = true;
-		
-		
+
 		do {
 			System.out.println();
 			displayMenu();
-			
-			switch(input.nextInt()) {
-			
-			case 1: 
+
+			switch (input.nextInt()) {
+
+			case 1:
 				System.out.println("Please enter in the film id: ");
-				
+
 				Film filmById = db.findFilmById(input.nextInt());
 				if (filmById != null) {
-					System.out.println(filmById);
-				} else 
+					basicInfoByID(filmById);
+				} else
 					System.out.println("\nSorry, unable to locate a film with that ID.");
-				
+
 				break;
-				
+
 			case 2:
 				System.out.println("Please enter in a keyword: ");
-				List<Film> filmByKeyword = db.findFilmByKeyword(input.next());
-				System.out.println(filmByKeyword);
-				if (filmByKeyword != null) {
-					System.out.println(filmByKeyword);
-				} else 
-					System.out.println("\nSorry, unable to locate a film with that ID.");
-				break;
+				List<Film> filmsByKeyword = db.findFilmByKeyword(input.next());
 				
+				
+				if (filmsByKeyword.isEmpty()) {
+					System.out.println();
+					System.out.println("Sorry, unable to locate films with that keyword.");
+				} else
+					System.out.println(filmsByKeyword);
+					
+				break;
+
 			case 3:
 				System.out.println("You are exting the application. /Bye-Bye!");
-				keepgoing=false;
+				keepgoing = false;
 				break;
-				
+
 			default:
 				System.out.println("Oops! Invalid entry. Please choose from 1-3.");
 			}
-			
-			
-			
-		} while(keepgoing);
-		
-	
-		
-		
+
+		} while (keepgoing);
+
 	}
-	
+
 	private void displayMenu() {
 		System.out.println("*************************************");
 		System.out.println("*             MAIN MENU             *");
@@ -102,7 +100,29 @@ public class FilmQueryApp {
 		System.out.println("*                                   *");
 		System.out.println("*************************************");
 	}
+	
 
+	public void basicInfoByID(Film film) {
+		int filmID = film.getFilmID();
+		String title = film.getTitle();
+		int releaseYear = film.getReleaseYear();
+		String rating = film.getRating();
+		String desc = film.getDescription();
+		
+		System.out.println("Film ID: " + filmID + "\nFilm title: " + title + "\nRelease Year: " + releaseYear);
+		System.out.println("Film rating: " + rating + "\nDescription: " + desc);
+	}
 	
-	
+	public void basicInfoByKeyword(List<Film> films) {
+		
+		for(Film film : films) {
+			
+			
+		}
+		
+		
+		
+		
+	}
+
 }

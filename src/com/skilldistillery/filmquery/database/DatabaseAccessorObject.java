@@ -53,7 +53,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				int filmID = rs.getInt("id");
 				String title = rs.getString("title");
 				String description = rs.getString("description");
-				short releaseYear = rs.getShort("release_year");
+				int releaseYear = rs.getInt("release_year");
 				int languageID = rs.getInt("language_id");
 				int rentDuration = rs.getInt("rental_duration");
 				double rentalRate = rs.getDouble("rental_rate");
@@ -78,6 +78,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 		return film;
 	}
+
 
 	@Override
 	public Actor findActorById(int actorId) {
@@ -154,8 +155,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 		return actors;
 	}
-	
-	
+
 //	public Film printBasicFilmInfo(int film) {
 //		
 //		System.out.println("Film ID: " + film.getFilmID() + " \nTitle: " + film.getTitle() + " \nYear released: " + film.getReleaseYear());
@@ -165,7 +165,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	@Override
 	public List<Film> findFilmByKeyword(String keyword) {
 		List<Film> films = new ArrayList<>();
-		
 
 		try {
 			// 1. connecting to the database
@@ -173,33 +172,33 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 			// 2. defining query we want to execute and substituting values for placeholder
 			String filmText = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film ";
-					filmText += "WHERE title LIKE ? OR description LIKE ?";
-
+			filmText += "WHERE title LIKE ? OR description LIKE ?";
 
 			PreparedStatement stmt = conn.prepareStatement(filmText);
 			stmt.setString(1, "%" + keyword + "%");
 			stmt.setString(2, "%" + keyword + "%");
-			
+
 			// 3. execute query
 			ResultSet rs = stmt.executeQuery();
 
 			// 4. process result
 			while (rs.next()) {
+
 				int filmID = rs.getInt("id");
 				String title = rs.getString("title");
 				String description = rs.getString("description");
 				short releaseYear = rs.getShort("release_year");
 				int languageID = rs.getInt("language_id");
-				int rentDuration = rs.getInt("rental_duration");
-				double rentalRate = rs.getDouble("rental_rate");
+				int rentalDuration = rs.getInt("rental_duration");
+				double rentRate = rs.getDouble("rental_rate");
 				int length = rs.getInt("length");
 				double replacementCost = rs.getDouble("replacement_cost");
 				String rating = rs.getString("rating");
 				String specialFeatures = rs.getString("special_features");
 				List<Actor> actors = findActorsByFilmId(filmID);
 
-				Film filmObj = new Film(filmID, title, description, releaseYear, languageID, rentDuration, rentalRate,
-						length, replacementCost, rating, specialFeatures, actors);
+				Film filmObj = new Film(filmID, title, description, releaseYear, languageID, rentalDuration,
+						rentRate, length, replacementCost, rating, specialFeatures, actors);
 				films.add(filmObj);
 
 			}
@@ -213,47 +212,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 		return films;
 	}
-	
-	@Override
-	public Film findBasicFilm(int filmId) {
-		Film film = null;
 
-		try {
-			// 1. connecting to the database
-			Connection conn = DriverManager.getConnection(URL, user, pass);
-
-			// 2. defining query we want to execute and substituting values for placeholder
-			String filmText = "SELECT id, title, release_year, rating, description FROM film WHERE id = ?";
-
-			PreparedStatement stmt = conn.prepareStatement(filmText);
-			stmt.setInt(1, filmId);
-
-			// 3. execute query
-			ResultSet rs = stmt.executeQuery();
-
-			// 4. process result
-			if (rs.next()) {
-				int filmID = rs.getInt("id");
-				String title = rs.getString("title");
-				String description = rs.getString("description");
-				short releaseYear = rs.getShort("release_year");
-				String rating = rs.getString("rating");
-
-
-				Film filmObj = new Film(filmID, title, description, releaseYear, rating);		
-				return filmObj;
-			}
-			rs.close();
-			stmt.close();
-			conn.close();
-
-		} catch (SQLException e) {
-			System.err.println("Error locating film " + filmId);
-			System.out.println(e);
-		}
-		return film;
-	}
-	
-	
 
 }
