@@ -58,14 +58,20 @@ public class FilmQueryApp {
 				Film filmById = db.findFilmById(input.nextInt());
 				if (filmById != null) {
 					System.out.println(filmById);
-				} else System.out.println("Sorry, unable to locate a film with that ID.");
+				} else 
+					System.out.println("\nSorry, unable to locate a film with that ID.");
 				
 				break;
 				
 			case 2:
 				System.out.println("Please enter in a keyword: ");
-				Film filmByKeyword = db.findFilmByKeyword(input.next());
+				List<Film> filmByKeyword = db.findFilmByKeyword(input.next());
 				System.out.println(filmByKeyword);
+				if (filmByKeyword != null) {
+					System.out.println(filmByKeyword);
+				} else 
+					System.out.println("\nSorry, unable to locate a film with that ID.");
+				break;
 				
 			case 3:
 				System.out.println("You are exting the application. /Bye-Bye!");

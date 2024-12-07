@@ -204,10 +204,10 @@ public class Film {
 
 	@Override
 	public String toString() {
-		return "Film ID: " + filmID + "\nTitle: " + title + "\nDescription: " + description + "\nReleaseYear: "
+		return "\nFilm ID: " + filmID + "\nTitle: " + title + "\nDescription: " + description + "\nReleaseYear: "
 				+ releaseYear + "\nLanguage ID: " + languageID + "\nRental Duration: " + rentalDuration + "\nRental Rate: "
 				+ rentalRate + "\nLength: " + length + "\nReplacement Cost: " + replacementCost + "\nRating: " + rating
-				+ "\nSpecial Features: " + specialFeatures + "\n\nActors In Film:" + actors;
+				+ "\nSpecial Features: " + specialFeatures + "\n\nActors In Film:" + actors ;
 	}
 	
 	

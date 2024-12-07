@@ -163,8 +163,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 //		
 //	}
 	@Override
-	public Film findFilmByKeyword(String keyword) {
-		Film film = null;
+	public List<Film> findFilmByKeyword(String keyword) {
+		List<Film> films = new ArrayList<>();
+		
 
 		try {
 			// 1. connecting to the database
@@ -172,17 +173,18 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 			// 2. defining query we want to execute and substituting values for placeholder
 			String filmText = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film ";
-					filmText += "WHERE title LIKE '%?%' OR description LIKE '%?%'";
+					filmText += "WHERE title LIKE ? OR description LIKE ?";
 
 
 			PreparedStatement stmt = conn.prepareStatement(filmText);
-			stmt.setString(1, keyword);
-
+			stmt.setString(1, "%" + keyword + "%");
+			stmt.setString(2, "%" + keyword + "%");
+			
 			// 3. execute query
 			ResultSet rs = stmt.executeQuery();
 
 			// 4. process result
-			if (rs.next()) {
+			while (rs.next()) {
 				int filmID = rs.getInt("id");
 				String title = rs.getString("title");
 				String description = rs.getString("description");
@@ -198,18 +200,18 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 				Film filmObj = new Film(filmID, title, description, releaseYear, languageID, rentDuration, rentalRate,
 						length, replacementCost, rating, specialFeatures, actors);
+				films.add(filmObj);
 
-				return filmObj;
 			}
 			rs.close();
 			stmt.close();
 			conn.close();
 
 		} catch (SQLException e) {
-			System.err.println("Error locating film with keyword" + keyword);
+			System.err.println("Error locating film with keyword " + keyword);
 			System.out.println(e);
 		}
-		return film;
+		return films;
 	}
 	
 	@Override
