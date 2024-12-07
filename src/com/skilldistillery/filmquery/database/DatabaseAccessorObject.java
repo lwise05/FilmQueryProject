@@ -163,6 +163,56 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 //		
 //	}
 	@Override
+	public Film findFilmByKeyword(String keyword) {
+		Film film = null;
+
+		try {
+			// 1. connecting to the database
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+
+			// 2. defining query we want to execute and substituting values for placeholder
+			String filmText = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film ";
+					filmText += "WHERE title LIKE '%?%' OR description LIKE '%?%'";
+
+
+			PreparedStatement stmt = conn.prepareStatement(filmText);
+			stmt.setString(1, keyword);
+
+			// 3. execute query
+			ResultSet rs = stmt.executeQuery();
+
+			// 4. process result
+			if (rs.next()) {
+				int filmID = rs.getInt("id");
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				short releaseYear = rs.getShort("release_year");
+				int languageID = rs.getInt("language_id");
+				int rentDuration = rs.getInt("rental_duration");
+				double rentalRate = rs.getDouble("rental_rate");
+				int length = rs.getInt("length");
+				double replacementCost = rs.getDouble("replacement_cost");
+				String rating = rs.getString("rating");
+				String specialFeatures = rs.getString("special_features");
+				List<Actor> actors = findActorsByFilmId(filmID);
+
+				Film filmObj = new Film(filmID, title, description, releaseYear, languageID, rentDuration, rentalRate,
+						length, replacementCost, rating, specialFeatures, actors);
+
+				return filmObj;
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			System.err.println("Error locating film with keyword" + keyword);
+			System.out.println(e);
+		}
+		return film;
+	}
+	
+	@Override
 	public Film findBasicFilm(int filmId) {
 		Film film = null;
 
