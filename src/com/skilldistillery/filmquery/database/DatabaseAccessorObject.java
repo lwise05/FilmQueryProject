@@ -62,8 +62,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				String rating = rs.getString("rating");
 				String specialFeatures = rs.getString("special_features");
 				List<Actor> actors = findActorsByFilmId(filmId);
+				String language = findLanguageById(languageID);
 
-				Film filmObj = new Film(filmID, title, description, releaseYear, languageID, rentDuration, rentalRate,
+				Film filmObj = new Film(filmID, title, description, releaseYear, languageID, language, rentDuration, rentalRate,
 						length, replacementCost, rating, specialFeatures, actors);
 
 				return filmObj;
@@ -79,6 +80,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return film;
 	}
 
+	
 
 	@Override
 	public Actor findActorById(int actorId) {
@@ -156,12 +158,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return actors;
 	}
 
-//	public Film printBasicFilmInfo(int film) {
-//		
-//		System.out.println("Film ID: " + film.getFilmID() + " \nTitle: " + film.getTitle() + " \nYear released: " + film.getReleaseYear());
-//		System.out.println(" \nRating: " + film.getRating() + " \nDescription: " + film.getDescription());
-//		
-//	}
+	
+
 	@Override
 	public List<Film> findFilmByKeyword(String keyword) {
 		List<Film> films = new ArrayList<>();
@@ -187,7 +185,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				int filmID = rs.getInt("id");
 				String title = rs.getString("title");
 				String description = rs.getString("description");
-				short releaseYear = rs.getShort("release_year");
+				int releaseYear = rs.getInt("release_year");
 				int languageID = rs.getInt("language_id");
 				int rentalDuration = rs.getInt("rental_duration");
 				double rentRate = rs.getDouble("rental_rate");
@@ -196,8 +194,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				String rating = rs.getString("rating");
 				String specialFeatures = rs.getString("special_features");
 				List<Actor> actors = findActorsByFilmId(filmID);
+				String language = findLanguageById(languageID);
 
-				Film filmObj = new Film(filmID, title, description, releaseYear, languageID, rentalDuration,
+				Film filmObj = new Film(filmID, title, description, releaseYear, languageID, language, rentalDuration,
 						rentRate, length, replacementCost, rating, specialFeatures, actors);
 				films.add(filmObj);
 
@@ -213,5 +212,33 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return films;
 	}
 
+	public String findLanguageById(int langId) {
+		
+		try {
+			// 1. connecting to the database
+			Connection conn = DriverManager.getConnection(URL, user, pass);
 
+			// 2. defining query we want to execute and substituting values for placeholder
+			String langName = "SELECT name FROM language WHERE id = ?";
+			
+			PreparedStatement stmt = conn.prepareStatement(langName);
+			stmt.setInt(1, langId);
+			
+			// 3. execute query
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				String lang = rs.getString("name");
+				return lang;
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+			
+			
+	}catch(SQLException e) {
+		System.out.println(e);
+	}
+		return null;
+	}
 }
