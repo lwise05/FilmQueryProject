@@ -37,12 +37,6 @@ public class FilmQueryApp {
 	}
 
 	private void startUserInterface(Scanner input) {
-		// print menu
-		// get choice
-		// -do while loop
-
-		// act on choice
-		// repeat until they quit
 
 		boolean keepgoing = true;
 
@@ -56,9 +50,10 @@ public class FilmQueryApp {
 				System.out.println("Please enter in the film id: ");
 
 				Film filmById = db.findFilmById(input.nextInt());
-				
+
 				if (filmById != null) {
 					basicInfoByID(filmById);
+					
 				} else
 					System.out.println("\nSorry, unable to locate a film with that ID.");
 
@@ -67,17 +62,18 @@ public class FilmQueryApp {
 			case 2:
 				System.out.println("Please enter in a keyword: ");
 				List<Film> filmsByKeyword = db.findFilmByKeyword(input.next());
-				
+
 				if (filmsByKeyword.isEmpty()) {
 					System.out.println();
 					System.out.println("Sorry, unable to locate films with that keyword.");
 				} else
 					basicInfoByKeyword(filmsByKeyword);
 					
+
 				break;
 
 			case 3:
-				System.out.println("You are exting the application. /Bye-Bye!");
+				System.out.println("You are exting the application. \nBye-Bye!");
 				keepgoing = false;
 				break;
 
@@ -100,7 +96,6 @@ public class FilmQueryApp {
 		System.out.println("*                                   *");
 		System.out.println("*************************************");
 	}
-	
 
 	public void basicInfoByID(Film film) {
 		int filmID = film.getFilmID();
@@ -109,31 +104,46 @@ public class FilmQueryApp {
 		int releaseYear = film.getReleaseYear();
 		String rating = film.getRating();
 		String desc = film.getDescription();
-		List actors = film.getActors();
 		
 		
-		System.out.println("Film ID: " + filmID + "\nFilm title: " + title + "\nLanguage: " + language +"\nRelease Year: " + releaseYear);
-		System.out.println("Cast in film: " + actors + "\nFilm rating: " + rating + "\nDescription: " + desc);
+		System.out.println("-----------------------------------------------------------------------------------------------------------");
+		System.out.println();
+		System.out.println(title + " (Movie Id:" + filmID +")");
+		System.out.println();
+		System.out.println("Release year: " + releaseYear + "\tLanguage: " + language + "\tFilm rating: " + rating);
+		System.out.println();
+		System.out.println("Movie description: \n" + desc);
+		System.out.println();
+		printActors(film.getActors());
 	}
-	
+
 	public void basicInfoByKeyword(List<Film> films) {
 		
-		for(Film film : films) {
-			System.out.println("Film Id: " + film.getFilmID());
-			System.out.println("Title : " + film.getTitle());
-			System.out.println("Language : " + film.getLanguage());
-			System.out.println("Release year: " + film.getReleaseYear());
-			System.out.println("Cast in film: " + film.getActors());
-			System.out.println("Rating: " + film.getRating());
-			System.out.println("Description : " + film.getDescription());
-			System.out.println();
+
+		for (Film film : films) {
 			
+			System.out.println("-----------------------------------------------------------------------------------------------------------");
+			System.out.println();
+			System.out.println(film.getTitle() + " (Movie Id:" + film.getFilmID() +")");
+			System.out.println();
+			System.out.println("Release year: " + film.getReleaseYear() + "\tLanguage: " + film.getLanguage() + "\tFilm rating: " + film.getRating());
+			System.out.println();
+			System.out.println("Movie description: \n" + film.getDescription());
+			System.out.println();
+			printActors(film.getActors());
+
 		}
 	}
+
+	public void printActors(List<Actor> actors) {
 		
-	
-		
-		
-	
+		System.out.println("Cast:");
+		int count = 1;
+		for (Actor actor : actors) {
+			System.out.println(count + ") " + actor.getFirstName() + " " + actor.getLastName());
+			count++;
+		}
+		System.out.println("-----------------------------------------------------------------------------------------------------------");
+	}
 
 }
