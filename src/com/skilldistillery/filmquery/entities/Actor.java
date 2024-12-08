@@ -43,9 +43,10 @@ public class Actor {
 		this.lastName = lastName;
 	}
 
+	
 	@Override
 	public String toString() {
-		return "\nActor ID: " + actorID + ", Name: " + firstName + " " + lastName;
+		return "Actor [actorID=" + actorID + ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 
 	@Override
@@ -65,5 +66,6 @@ public class Actor {
 		return actorID == other.actorID && Objects.equals(firstName, other.firstName)
 				&& Objects.equals(lastName, other.lastName);
 	}
+
 
 }

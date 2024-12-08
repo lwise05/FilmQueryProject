@@ -198,11 +198,13 @@ public class Film {
 
 	@Override
 	public String toString() {
-		return "\nFilm ID: " + filmID + "\nTitle: " + title + "\nDescription: " + description + "\nReleaseYear: "
-				+ releaseYear + "\nLanguage ID: " + languageID + "\nLanguage: " + language +"\nRental Duration: " + rentalDuration + "\nRental Rate: "
-				+ rentalRate + "\nLength: " + length + "\nReplacement Cost: " + replacementCost + "\nRating: " + rating
-				+ "\nSpecial Features: " + specialFeatures + "\n\nActors In Film:" + actors ;
+		return "Film [filmID=" + filmID + ", title=" + title + ", description=" + description + ", releaseYear="
+				+ releaseYear + ", languageID=" + languageID + ", language=" + language + ", rentalDuration="
+				+ rentalDuration + ", rentalRate=" + rentalRate + ", length=" + length + ", replacementCost="
+				+ replacementCost + ", rating=" + rating + ", specialFeatures=" + specialFeatures + ", actors=" + actors
+				+ "]";
 	}
+
 
 
 
@@ -231,6 +233,9 @@ public class Film {
 				&& Double.doubleToLongBits(replacementCost) == Double.doubleToLongBits(other.replacementCost)
 				&& Objects.equals(specialFeatures, other.specialFeatures) && Objects.equals(title, other.title);
 	}
+
+
+
 	
 	
 

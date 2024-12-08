@@ -47,7 +47,7 @@ public class FilmQueryApp {
 			switch (input.nextInt()) {
 
 			case 1:
-				System.out.println("Please enter in the film id: ");
+				System.out.println("\nPlease enter in the film id: ");
 
 				Film filmById = db.findFilmById(input.nextInt());
 
@@ -57,18 +57,31 @@ public class FilmQueryApp {
 				} else
 					System.out.println("\nSorry, unable to locate a film with that ID.");
 
+				System.out.println();
+				System.out.println("Enter 1 to view additional movie details \nEnter 2 to return to the Main Menu");
+					switch(input.nextInt()) {
+					case 1: 
+						printAllMovieInfo(filmById);
+						break;
+						
+					case 2:
+						break;
+					}
+						
+				
 				break;
+				
 
 			case 2:
-				System.out.println("Please enter in a keyword: ");
+				System.out.println("\nPlease enter in a keyword: ");
 				List<Film> filmsByKeyword = db.findFilmByKeyword(input.next());
 
 				if (filmsByKeyword.isEmpty()) {
 					System.out.println();
-					System.out.println("Sorry, unable to locate films with that keyword.");
+					System.out.println("\nSorry, unable to locate films with that keyword.");
 				} else
 					basicInfoByKeyword(filmsByKeyword);
-					
+				
 
 				break;
 
@@ -78,7 +91,7 @@ public class FilmQueryApp {
 				break;
 
 			default:
-				System.out.println("Oops! Invalid entry. Please choose from 1-3.");
+				System.out.println("\nOops! Invalid entry. Please choose from 1-3.");
 			}
 
 		} while (keepgoing);
@@ -146,4 +159,55 @@ public class FilmQueryApp {
 		System.out.println("-----------------------------------------------------------------------------------------------------------");
 	}
 
+	public void printAllMovieInfo(Film film) {
+		int filmID = film.getFilmID();
+		String title = film.getTitle();
+		String language = film.getLanguage();
+		int releaseYear = film.getReleaseYear();
+		String rating = film.getRating();
+		String desc = film.getDescription();
+		int length = film.getLength();
+		double replacementCost = film.getReplacementCost();
+		String specFeatures = film.getSpecialFeatures();
+		int languageID = film.getLanguageID();
+		double rate = film.getRentalRate();
+		int duration = film.getRentalDuration();
+		
+	
+		
+		System.out.println();
+		System.out.println("-----------------------------------------------------------------------------------------------------------");
+		System.out.println();
+		System.out.println(title + " (Movie Id:" + filmID +")");
+		System.out.println();
+		System.out.println("Release year: " + releaseYear + "\tLanguage: " + language + "(Language Id: " + languageID + ")\tFilm rating: " + rating);
+		System.out.println();
+		System.out.println("Movie description: \n" + desc);
+		System.out.println();
+		System.out.println("Length: " + length + " minutes\tSpecial Features: " + specFeatures);
+		printActors(film.getActors());
+		System.out.println();
+		System.out.println("Rental rate: $" + rate + "\tRental duration: " + duration + " days \tReplacement cost: $" + replacementCost);
+		System.out.println();
+		System.out.println("-----------------------------------------------------------------------------------------------------------");
+	}
+	
+	
+	
+	public void subMenu(Scanner input) {
+		System.out.println();
+		System.out.println("Enter 1 to view additional movie details \nEnter 2 to return to the Main Menu");
+		
+		switch(input.nextInt()) {
+		
+		case 1:
+			Film filmById = db.findFilmById(input.nextInt());
+		case 2:
+			break;
+		
+		default:
+			System.out.println("\nOops! Invalid entry. Please enter 1 or 2.");
+		}
+		
+	}
 }
