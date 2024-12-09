@@ -1,6 +1,7 @@
 package com.skilldistillery.filmquery.app;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -39,26 +40,28 @@ public class FilmQueryApp {
 	private void startUserInterface(Scanner input) {
 
 		boolean keepgoing = true;
+		
+		int choice = 0;
 
 		do {
-			System.out.println();
 			displayMenu();
+			
+			choice = input.nextInt();
 
-			switch (input.nextInt()) {
+			switch (choice) {
 
 			case 1:
 				System.out.println("\nPlease enter in the film id: ");
 
 				Film filmById = db.findFilmById(input.nextInt());
 
-				if (filmById != null) {
-					basicInfoByID(filmById);
+				if (filmById == null) {
+					System.out.println("\nSorry, unable to locate a film with that ID.\n");
+					break;
 					
 				} else
-					System.out.println("\nSorry, unable to locate a film with that ID.");
-
-				System.out.println();
-				System.out.println("Enter 1 to view additional movie details \nEnter 2 to return to the Main Menu");
+					basicInfoByID(filmById);
+					displaySubMenu();
 					switch(input.nextInt()) {
 					case 1: 
 						printAllMovieInfo(filmById);
@@ -67,8 +70,6 @@ public class FilmQueryApp {
 					case 2:
 						break;
 					}
-						
-				
 				break;
 				
 
@@ -78,10 +79,20 @@ public class FilmQueryApp {
 
 				if (filmsByKeyword.isEmpty()) {
 					System.out.println();
-					System.out.println("\nSorry, unable to locate films with that keyword.");
+					System.out.println("\nSorry, unable to locate films with that keyword.\n");
+					break;
 				} else
 					basicInfoByKeyword(filmsByKeyword);
 				
+				displaySubMenu();
+				switch(input.nextInt()) {
+				case 1: 
+					printAllMovieInfo(filmsByKeyword);
+					break;
+					
+				case 2:
+					break;
+				}
 
 				break;
 
@@ -93,13 +104,18 @@ public class FilmQueryApp {
 			default:
 				System.out.println("\nOops! Invalid entry. Please choose from 1-3.");
 			}
-
+			
+			
+			
 		} while (keepgoing);
-
-	}
+		
+		
+		}
+	
 
 	private void displayMenu() {
-		System.out.println("*************************************");
+	
+		System.out.println("\n*************************************");
 		System.out.println("*             MAIN MENU             *");
 		System.out.println("*   Please choose from options 1-3  *");
 		System.out.println("*                                   *");
@@ -109,30 +125,31 @@ public class FilmQueryApp {
 		System.out.println("*                                   *");
 		System.out.println("*************************************");
 	}
+	
+	private void displaySubMenu() {
+		System.out.println("*************************************");
+		System.out.println("*              SUBMENU              *");
+		System.out.println("* Please choose from the following  *");
+		System.out.println("*                                   *");
+		System.out.println("* 1. View all movie details         *");
+		System.out.println("* 2. Return to main menu            *");
+		System.out.println("*                                   *");
+		System.out.println("*************************************");
+	}
 
 	public void basicInfoByID(Film film) {
-		int filmID = film.getFilmID();
-		String title = film.getTitle();
-		String language = film.getLanguage();
-		int releaseYear = film.getReleaseYear();
-		String rating = film.getRating();
-		String desc = film.getDescription();
-		
-		
 		System.out.println("-----------------------------------------------------------------------------------------------------------");
 		System.out.println();
-		System.out.println(title + " (Movie Id:" + filmID +")");
+		System.out.println(film.getTitle() + " (Movie Id:" + film.getFilmID() +")");
 		System.out.println();
-		System.out.println("Release year: " + releaseYear + "\tLanguage: " + language + "\tFilm rating: " + rating);
+		System.out.println("Release year: " + film.getReleaseYear() + "\tLanguage: " + film.getLanguage() + "\tFilm rating: " + film.getRating());
 		System.out.println();
-		System.out.println("Movie description: \n" + desc);
+		System.out.println("Movie description: \n" + film.getDescription());
 		System.out.println();
 		printActors(film.getActors());
 	}
 
 	public void basicInfoByKeyword(List<Film> films) {
-		
-
 		for (Film film : films) {
 			
 			System.out.println("-----------------------------------------------------------------------------------------------------------");
@@ -149,7 +166,6 @@ public class FilmQueryApp {
 	}
 
 	public void printActors(List<Actor> actors) {
-		
 		System.out.println("Cast:");
 		int count = 1;
 		for (Actor actor : actors) {
@@ -160,54 +176,35 @@ public class FilmQueryApp {
 	}
 
 	public void printAllMovieInfo(Film film) {
-		int filmID = film.getFilmID();
-		String title = film.getTitle();
-		String language = film.getLanguage();
-		int releaseYear = film.getReleaseYear();
-		String rating = film.getRating();
-		String desc = film.getDescription();
-		int length = film.getLength();
-		double replacementCost = film.getReplacementCost();
-		String specFeatures = film.getSpecialFeatures();
-		int languageID = film.getLanguageID();
-		double rate = film.getRentalRate();
-		int duration = film.getRentalDuration();
-		
-	
-		
-		System.out.println();
-		System.out.println("-----------------------------------------------------------------------------------------------------------");
-		System.out.println();
-		System.out.println(title + " (Movie Id:" + filmID +")");
-		System.out.println();
-		System.out.println("Release year: " + releaseYear + "\tLanguage: " + language + "(Language Id: " + languageID + ")\tFilm rating: " + rating);
-		System.out.println();
-		System.out.println("Movie description: \n" + desc);
-		System.out.println();
-		System.out.println("Length: " + length + " minutes\tSpecial Features: " + specFeatures);
+		System.out.println("\n-----------------------------------------------------------------------------------------------------------\n");
+		System.out.println(film.getTitle() + " (Movie Id:" + film.getFilmID() +")\n");
+		System.out.println("Release year: " + film.getReleaseYear() + "\tLanguage: " + film.getLanguage() + "(Language Id: " + film.getLanguageID() + ")\tFilm rating: " + film.getRating());
+		System.out.println("\nMovie description: \n" + film.getDescription());
+		System.out.println("\nLength: " + film.getLength() + " minutes\tSpecial Features: " + film.getSpecialFeatures() + "\n");
 		printActors(film.getActors());
-		System.out.println();
-		System.out.println("Rental rate: $" + rate + "\tRental duration: " + duration + " days \tReplacement cost: $" + replacementCost);
-		System.out.println();
-		System.out.println("-----------------------------------------------------------------------------------------------------------");
+		System.out.println("\nRental rate: $" + film.getRentalRate() + "\tRental duration: " + film.getRentalDuration() + " days \tReplacement cost: $" + film.getReplacementCost());
+		System.out.println("\n-----------------------------------------------------------------------------------------------------------");
 	}
 	
 	
-	
-	public void subMenu(Scanner input) {
-		System.out.println();
-		System.out.println("Enter 1 to view additional movie details \nEnter 2 to return to the Main Menu");
-		
-		switch(input.nextInt()) {
-		
-		case 1:
-			Film filmById = db.findFilmById(input.nextInt());
-		case 2:
-			break;
-		
-		default:
-			System.out.println("\nOops! Invalid entry. Please enter 1 or 2.");
+	public void printAllMovieInfo (List<Film> films) {
+		for (Film film: films) {
+			System.out.println("\n-----------------------------------------------------------------------------------------------------------\n");
+			System.out.println(film.getTitle() + " (Movie Id:" + film.getFilmID() +")\n");
+			System.out.println("Release year: " + film.getReleaseYear() + "\tLanguage: " + film.getLanguage() + "(Language Id: " + film.getLanguageID() + ")\tFilm rating: " + film.getRating());
+			System.out.println("\nMovie description: \n" + film.getDescription());
+			System.out.println("\nLength: " + film.getLength() + " minutes\tSpecial Features: " + film.getSpecialFeatures() + "\n");
+			printActors(film.getActors());
+			System.out.println("\nRental rate: $" + film.getRentalRate() + "\tRental duration: " + film.getRentalDuration() + " days \tReplacement cost: $" + film.getReplacementCost());
+			System.out.println("\n-----------------------------------------------------------------------------------------------------------");
 		}
 		
 	}
+
+	
+	
+	
+	
+	
+	
 }
